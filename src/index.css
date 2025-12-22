@@ -1,6 +1,45 @@
 @import "tailwindcss";
 
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #0a0a0a;
+  color: white;
+}
 
-input:-webkit-autofill {
-  transition: background-color 9999s ease-in-out 0s;
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #0a0a0a;
+}
+
+.input {
+  @apply bg-zinc-900 border border-zinc-700 rounded px-4 py-2 text-white placeholder-zinc-500 w-full focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent;
+}
+
+.btn-primary {
+  @apply bg-amber-500 text-black font-medium px-6 py-2 rounded hover:bg-amber-400 transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-zinc-800 text-white font-medium px-6 py-2 rounded hover:bg-zinc-700 transition-colors border border-zinc-700;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #525252;
 }
