@@ -3,6 +3,8 @@ import { useState } from "react";
 
 const UserTable = ({ users = [], onEdit, onDelete }) => {
   const [selectedUser, setSelectedUser] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 5;
 
   const getRoleColor = (role) => {
     switch (role?.toLowerCase()) {
@@ -21,6 +23,15 @@ const UserTable = ({ users = [], onEdit, onDelete }) => {
   const closeModal = () => {
     setSelectedUser(null);
   };
+
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+
+const paginatedUsers = users.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
+
+  
 
   // Format date for display
   const formatDate = (dateString) => {
@@ -54,7 +65,7 @@ const UserTable = ({ users = [], onEdit, onDelete }) => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {paginatedUsers.map((user) => (
                 <tr key={user.id || user._id} className="border-b border-zinc-800 hover:bg-zinc-800/50">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
@@ -134,27 +145,49 @@ const UserTable = ({ users = [], onEdit, onDelete }) => {
         )}
 
         {/* Pagination */}
-        {users.length > 0 && (
-          <div className="p-4 border-t border-zinc-800 flex items-center justify-between">
-            <p className="text-zinc-400 text-sm">
-              Showing <span className="font-medium">{users.length}</span> users
-            </p>
-            <div className="flex gap-2">
-              <button className="px-4 py-2 bg-zinc-800 text-zinc-300 rounded hover:bg-zinc-700 transition-colors">
-                Previous
-              </button>
-              <button className="px-4 py-2 bg-amber-500 text-black rounded hover:bg-amber-400 transition-colors">
-                1
-              </button>
-              <button className="px-4 py-2 bg-zinc-800 text-zinc-300 rounded hover:bg-zinc-700 transition-colors">
-                2
-              </button>
-              <button className="px-4 py-2 bg-zinc-800 text-zinc-300 rounded hover:bg-zinc-700 transition-colors">
-                Next
-              </button>
-            </div>
-          </div>
-        )}
+{totalPages > 1 && (
+  <div className="p-4 border-t border-zinc-800 flex items-center justify-between">
+    <p className="text-zinc-400 text-sm">
+      Page <span className="font-medium">{currentPage}</span> of{" "}
+      <span className="font-medium">{totalPages}</span>
+    </p>
+
+    <div className="flex gap-2">
+      <button
+        onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+        disabled={currentPage === 1}
+        className="px-4 py-2 bg-zinc-800 text-zinc-300 rounded hover:bg-zinc-700 disabled:opacity-50"
+      >
+        Previous
+      </button>
+
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+        <button
+          key={page}
+          onClick={() => setCurrentPage(page)}
+          className={`px-4 py-2 rounded transition-colors ${
+            page === currentPage
+              ? "bg-amber-500 text-black"
+              : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+          }`}
+        >
+          {page}
+        </button>
+      ))}
+
+      <button
+        onClick={() =>
+          setCurrentPage((p) => Math.min(p + 1, totalPages))
+        }
+        disabled={currentPage === totalPages}
+        className="px-4 py-2 bg-zinc-800 text-zinc-300 rounded hover:bg-zinc-700 disabled:opacity-50"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+)}
+
       </div>
 
       {/* User Details Modal */}
